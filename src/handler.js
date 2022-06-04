@@ -129,12 +129,6 @@ const getAllBooksHandler = (request, h) => {
       },
     };
   }
-  return {
-    status: 'success',
-    data: {
-      books,
-    },
-  };
 };
 // Function to get by id
 const getBookByIdHandler = (request, h) => {
