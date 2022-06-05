@@ -71,65 +71,143 @@ const addBookHandler = (request, h) => {
   return response;
 };
 
-const getAllBooksHandler = (request, h) => {
-  const nameQuery = request.query.name;
-  const readingQuery = request.query.reading;
-  const finishedQuery = request.query.finished;
-  console.log(request.query);
-  if (nameQuery !== undefined) {
-    console.log(nameQuery);
-    // return book with name
-    const bookFiltered = books.filter((x) => x.name === nameQuery);
+const getAllBooksHandler2 = (request) => {
+  const { name, reading, finished } = request.query;
+  if (name !== undefined) {
+    const book = books.filter((x) => x.name.toLowerCase() === name.toLowerCase());
+    console.log(book);
     return {
       status: 'success',
       data: {
-        bookFiltered,
+        book,
       },
     };
   }
-  if (readingQuery !== undefined) {
-    if (readingQuery === 1) {
-      console.log('reading true');
-      const bookReaded = books.filter((x) => x.reading === true);
-      return {
-        status: 'success',
-        data: {
-          bookReaded,
-        },
-      };
-    }
-    console.log('reading false');
-    const bookOnGoing = books.filter((x) => x.reading === false);
+  // End of logic
+  // Logic if reading query is inserted
+  if (parseInt(reading, 10) === 1) {
+    const book = books.filter((x) => x.reading === true);
     return {
       status: 'success',
       data: {
-        bookOnGoing,
+        book,
       },
     };
-  }
-
-  if (finishedQuery !== undefined) {
-    if (finishedQuery === 1) {
-      console.log('finished true');
-      const bookFinished = books.filter((x) => x.finished === true);
-      return {
-        status: 'success',
-        data: {
-          bookFinished,
-        },
-      };
-    }
-    console.log('finished false');
-    const bookFinishing = books.filter((x) => x.finished === false);
-    console.log(bookFinishing);
+  } if (parseInt(reading, 10) === 0) {
+    const book = books.filter((x) => x.reading === false);
     return {
       status: 'success',
       data: {
-        bookFinishing,
+        book,
       },
     };
   }
+  // End of logic
+  // Logic if reading query is inserted
+  if (parseInt(finished, 10) === 1) {
+    const book = books.filter((x) => x.finished === true);
+    return {
+      status: 'success',
+      data: {
+        book,
+      },
+    };
+  }
+  if (parseInt(finished, 10) === 0) {
+    const book = books.filter((x) => x.finished === false);
+    return {
+      status: 'success',
+      data: {
+        book,
+      },
+    };
+  }
+  // End of logic
+  return {
+    status: 'success',
+    data: {
+      books,
+    },
+  };
 };
+
+// const getAllBooksHandler = (request, h) => {
+//   // const nameQuery = request.query.name;
+//   // const readingQuery = request.query.reading;
+//   // const finished= request.query.finished;
+//   const book = []
+//   const {name, reading, finished} = request.query
+//   console.log(request.query);
+//   if (name !== undefined) {
+//     console.log(name);
+//     // return book with name
+//     const bookFiltered = books.filter((x) => x.name === name);
+//     book.push(bookFiltered)
+//     return {
+//       status: 'success',
+//       data: {
+//         bookFiltered,
+//       },
+//     };
+//   }
+//   if (reading!== undefined) {
+//     console.log(reading=== '1');
+//     console.log(reading);
+//     if (reading === 1) {
+//       console.log('reading true');
+//       const bookReaded = books.filter((x) => x.reading === true);
+//       return {
+//         status: 'success',
+//         data: {
+//           bookReaded,
+//         },
+//       };
+//     // eslint-disable-next-line no-else-return
+//     } else {
+//       console.log('reading false');
+//       return {
+//         status: 'success',
+//         data: {
+//           books.filter((x) => x.reading === false),
+//         },
+//       };
+//     }
+//   }
+
+//   if (finished!== undefined) {
+//     if (finished=== 1) {
+//       console.log('finished true');
+//       const bookFinished = books.filter((x) => x.finished === true);
+//       return {
+//         status: 'success',
+//         data: {
+//           bookFinished,
+//         },
+//       };
+//     }
+//     console.log('finished false');
+//     const bookFinishing = books.filter((x) => x.finished === false);
+//     console.log(bookFinishing);
+//     return {
+//       status: 'success',
+//       data: {
+//         bookFinishing,
+//       },
+//     };
+//   }
+//   const response = h.response({
+//     status: 'fail',
+//     message: 'Buku tidak ditemukan',
+//   });
+//   response.code(404);
+//   return response;
+//   // return {
+//   //   status: 'success',
+//   //   data: {
+//   //     books,
+//   //   },
+//   // };
+// };
 // Function to get by id
 const getBookByIdHandler = (request, h) => {
   const { bookId } = request.params;
@@ -176,5 +254,5 @@ const deleteBookByIdHandler = (request, h) => {
 };
 
 module.exports = {
-  addBookHandler, getAllBooksHandler, getBookByIdHandler, deleteBookByIdHandler,
+  addBookHandler, getBookByIdHandler, deleteBookByIdHandler, getAllBooksHandler2,
 };
