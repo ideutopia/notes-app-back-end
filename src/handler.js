@@ -75,7 +75,9 @@ const addBookHandler = (request, h) => {
 const getAllBooksHandler2 = (request) => {
   const { name, reading, finished } = request.query;
   if (name !== undefined) {
-    const book = bookData.filter((x) => x.name.toLowerCase() === name.toLowerCase());
+    // const book = bookData.filter((x) => x.name.toLowerCase() === name.toLowerCase());
+    const book = bookData.filter((obj) => JSON.stringify(obj.name)
+      .toLowerCase().includes(name.toLowerCase()));
     const books = book.map((x) => ({
       id: x.id, name: x.name, publisher: x.publisher,
     }));
@@ -151,7 +153,7 @@ const getAllBooksHandler2 = (request) => {
 // Function to get by id
 const getBookByIdHandler = (request, h) => {
   const { bookId } = request.params;
-  const book = bookData.filter((x) => x.bookId === bookId)[0];
+  const book = bookData.filter((x) => x.id === bookId)[0];
 
   if (book !== undefined) {
     return {
@@ -176,7 +178,7 @@ const editBookByIdHandler = (request, h) => {
     name, year, author, summary, publisher, pageCount, readPage, reading,
   } = request.payload;
   const updatedAt = new Date().toISOString();
-  const index = bookData.findIndex((book) => book.bookId === bookId);
+  const index = bookData.findIndex((book) => book.id === bookId);
   // Check if name is not defined
   if (name === undefined) {
     const response = h.response({
@@ -219,7 +221,7 @@ const editBookByIdHandler = (request, h) => {
   // if bookID is not found
   const response = h.response({
     status: 'fail',
-    message: 'Gagal memperbarui buku. Id tidak ditemukan"',
+    message: 'Gagal memperbarui buku. Id tidak ditemukan',
   });
   response.code(404);
   return response;
@@ -227,8 +229,8 @@ const editBookByIdHandler = (request, h) => {
 
 // Function to delete
 const deleteBookByIdHandler = (request, h) => {
-  const { id } = request.params;
-  const index = bookData.findIndex((x) => x.id === id);
+  const { bookId } = request.params;
+  const index = bookData.findIndex((x) => x.id === bookId);
 
   if (index !== -1) {
     bookData.splice(index, 1);
